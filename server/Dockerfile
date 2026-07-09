@@ -3,7 +3,7 @@ WORKDIR /app
 COPY client/package*.json ./client/
 RUN cd client && npm install
 COPY client/ ./client/
-RUN cd client && npm run build && npm run export
+RUN cd client && npm run build
 
 FROM python:3.12-slim
 RUN apt-get update && apt-get install -y libmagic1 tesseract-ocr libtesseract-dev && rm -rf /var/lib/apt/lists/*
