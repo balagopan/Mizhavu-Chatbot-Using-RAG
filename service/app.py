@@ -55,6 +55,18 @@ tools=[retriver_tool]
 llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
 llm_with_tool=llm.bind_tools(tools=tools)
 
+off_topic_prompt=ChatPromptTemplate([
+    ("system","You are a chatbot, specifically Mizhavu Chatbot which is an educational chatbot. "
+    "You were created to educate people about the endangered Mizhavu instrument. "
+    "You are the agent who responds to questions the user asks, that are unrelated to the purpose "
+    "of the chat bot. \n"
+    "Your duty is to manage this type of situation with appropriate response. "
+    "If the user asks something about you do respond. \n"),
+    MessagesPlaceholder(variable_name="messages"),
+    ("system","You'r name is Mizhavu Ashan. 'Ashan' is a malayalam word meaning 'master'"
+    "Your duty is to talk friendly to the user based on the chat history")
+])
+
 rephrase_prompt=ChatPromptTemplate([
     ("system","You are a question rephraser, You do not answer the question. Your only duty is to rephrase the question entered by the uses into a "
     "meaningful stand alone question, preserving its meaning and context. \n"
@@ -68,7 +80,6 @@ bouncer_llm_prompt=ChatPromptTemplate([
     ("system","You are a decision maker AI assistant for a chatbot. The chatbot is called Mizhavu Chatbot. Your duty is to identify if the users question is "
     "about one of the following topics. \n\n"
     "1. Kudiyattam Theatre and the Mizhavu Drum\n"
-    "2. Information about this chatbot itself\n"
     ""
     "If the users question is about one of this topic respond with 'Yes' otherwise repond 'No'."),
     MessagesPlaceholder(variable_name="messages")
@@ -77,9 +88,8 @@ bouncer_llm_prompt=ChatPromptTemplate([
 answer_generator_llm_prompt=ChatPromptTemplate([
     ("system","You are a chatbot, specifically Mizhavu Chatbot which is an educational chatbot. "
     "You were created to educate people about the endangered Mizhavu instrument. "
-    "You name is Mizhavu Ashan. 'Ashan' is a malayalam word meaning 'master'"
     "Your duty is to provide answer to the user query by "
-    "calling tools to retrive information from the stored documents and by analyzing the chat "
+    "calling tools to retrive information from the your knowledge base and by analyzing the chat "
     "history."),
     MessagesPlaceholder(variable_name="messages"),
     ("system","Do not use tools if the users question can be answered using the chat history. " \
@@ -93,6 +103,7 @@ class AgentState(MessagesState):
 rephrase_chain=rephrase_prompt | llm
 answer_generator_chain=answer_generator_llm_prompt | llm_with_tool
 bouncer_chain=bouncer_llm_prompt | llm
+off_topic_chain=off_topic_prompt | llm
 
 
 async def rephrase_node(state:MessagesState):
@@ -135,10 +146,11 @@ async def router_node(state:AgentState):
     
 async def off_topic_node(state:AgentState):
     # print("ENTERED")
+    result=await off_topic_chain.ainvoke(state)
     return Command(
         goto=END,
         update={
-            "messages":AIMessage(content="Sorry I cannot Answer that question!")
+            "messages":result
         }
     )
 
@@ -227,7 +239,7 @@ async def generate_respose(message:str,checkpoint_id:Optional[str]=None):
         if event_type=="on_chat_model_stream":
             node_name = event.get("metadata", {}).get("langgraph_node")
 
-            if node_name == "answer_generator":
+            if node_name == "answer_generator" or node_name == "off_topic_node":
                 content = event["data"]["chunk"].content
                 if isinstance(content, list) and len(content) > 0:
                     content = content[0]["text"]
@@ -277,12 +289,6 @@ async def generate_respose(message:str,checkpoint_id:Optional[str]=None):
                     yield f"data: {{\"type\": \"search_results\", \"urls\": {urls_json}}}\n\n"
             except json.JSONDecodeError:
                 pass
-        
-
-        elif event_type == "on_chain_end" and event.get("name") == "off_topic_node":
-            content = "Sorry I cannot Answer that question!"
-            safe_content = content.replace('"', '\\"').replace("\n", "\\n")
-            yield f"data: {{\"type\":\"content\",\"content\":\"{safe_content}\"}}\n\n"
 
 
         print(f"{event}\n\n\n")
