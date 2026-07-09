@@ -36,7 +36,7 @@ const Home = () => {
       type: 'message'
     },
     {
-      id: 3,
+      id: 4,
       content: "Tell me how can I help you?",
       isUser: false,
       type: 'message'
