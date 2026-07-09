@@ -1,4 +1,4 @@
-FROM node:18-slim AS builder
+FROM node:20-slim AS builder
 WORKDIR /app
 COPY client/package*.json ./client/
 RUN cd client && npm install
