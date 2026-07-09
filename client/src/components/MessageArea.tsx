@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Message } from '@/types';
 
 interface SearchInfo {
@@ -118,8 +118,12 @@ const SearchStages = ({ searchInfo }: { searchInfo: SearchInfo | null }) => {
 };
 
 const MessageArea = ({ messages }: MessageAreaProps) => {
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
     return (
-        <div className="flex-grow overflow-y-auto bg-[#FCFCF8] border-b border-gray-100" style={{ minHeight: 0 }}>
+        <div className="flex-grow overflow-y-auto bg-transparent" style={{ minHeight: 0 }}>
             <div className="w-full p-6">
                 {messages.map((message) => (
                     <div key={message.id} className={`w-full flex ${message.isUser ? 'justify-end' : 'justify-start'} mb-5`}>
@@ -132,22 +136,35 @@ const MessageArea = ({ messages }: MessageAreaProps) => {
                             {/* Message Content */}
                             <div
                                 className={`rounded-lg py-3 px-5 ${message.isUser
-                                    ? 'bg-[#334155] text-white rounded-br-none shadow-md'
-                                    : 'bg-[#F3F3EE] text-gray-800 border border-gray-200 rounded-bl-none shadow-sm'
+                                    ? 'bg-[#7d5454] text-white rounded-br-none shadow-md'
+                                    : 'bg-[#F3F3EE] text-[#442929] border border-gray-200 rounded-bl-none shadow-sm'
                                     }`}
                             >
                                 {message.isLoading ? (
                                     <PremiumTypingAnimation />
                                 ) : (
-                                    message.content || (
-                                        // Fallback if content is empty but not in loading state
-                                        <span className="text-gray-400 text-xs italic">Waiting for response...</span>
+                                    <div className="flex flex-col gap-2">
+                                        {message.imageUrl && (
+                                            <img
+                                                src={message.imageUrl}
+                                                alt="Message attachment"
+                                                className="w-64 rounded-md object-cover"
+                                            />
+                                        )}
+                                        {message.content && (
+                                            <span>{message.content}</span>
+                                        )}
+                                        {!message.content && !message.imageUrl && (
+                                            <span className="text-gray-400 text-xs italic">Waiting for response...</span>
+                                        )}
+                                    </div>
                                     )
-                                )}
+                                }
                             </div>
                         </div>
                     </div>
                 ))}
+                <div ref={messagesEndRef} />
             </div>
         </div>
     );

@@ -13,4 +13,5 @@ export interface Message {
   content?: any;
   isLoading?: any;
   type: any;
+  imageUrl?: string;
 }

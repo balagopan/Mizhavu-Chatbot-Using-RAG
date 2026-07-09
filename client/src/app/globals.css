@@ -24,3 +24,29 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+
+/* Custom Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px; /* Makes the scrollbar slimmer and more modern */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Makes the track invisible so your background pattern shows through! */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #b89a8b; /* A nice subtle gray. Change this hex code to any color you want! */
+  border-radius: 10px; /* Makes the scrollbar nice and round (pill-shaped) */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #c0c4c9; /* Slightly darker when you hover over it */
+}
+
+/* For Firefox compatibility */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #b89a8b transparent;
+}

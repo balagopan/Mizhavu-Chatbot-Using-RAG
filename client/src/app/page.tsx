@@ -19,7 +19,14 @@ const Home = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
+      imageUrl: '/Chatbot_DP.jpg',
       content: 'Hi there, how can I help you?',
+      isUser: false,
+      type: 'message'
+    },
+    {
+      id: 2,
+      content: 'Welcome! I am your AI assistant. How can I help you today?', // Your new custom text
       isUser: false,
       type: 'message'
     }
@@ -226,7 +233,7 @@ const Home = () => {
   return (
     <div className="flex justify-center min-h-screen py-8 px-4 bg-[url('/Chatbot_Bg_2.jpg')] bg-cover bg-center bg-no-repeat bg-fixed">
       {/* Main container with refined shadow and border */}
-      <div className="w-full max-w-xl bg-gray-800 flex flex-col rounded-xl shadow-lg overflow-hidden h-[90vh]">
+      <div className="w-full max-w-xl flex flex-col h-[90vh] bg-transparent">
         <MessageArea messages={messages} />
         <InputBar currentMessage={currentMessage} setCurrentMessage={setCurrentMessage} onSubmit={handleSubmit} />
       </div>
