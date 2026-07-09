@@ -78,7 +78,7 @@ answer_generator_llm_prompt=ChatPromptTemplate([
     "You name is Mizhavu Ashan. 'Ashan' is a malayalam word meaning 'master'"
     "Your duty is to provide answer to the user query by "
     "calling tools to retrive information from the stored documents and by analyzing the chat "
-    "history."),1
+    "history."),
     MessagesPlaceholder(variable_name="messages"),
     ("system","Do not use tools if the users question can be answered using the chat history. " \
     "If the information is not sufficient use tools to " \
