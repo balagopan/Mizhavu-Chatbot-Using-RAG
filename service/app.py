@@ -17,6 +17,8 @@ from fastapi.responses import StreamingResponse
 from uuid import uuid4
 from langgraph.checkpoint.memory import MemorySaver
 from dotenv import load_dotenv
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 load_dotenv()
 
@@ -132,6 +134,7 @@ async def router_node(state:AgentState):
         return END
     
 async def off_topic_node(state:AgentState):
+    # print("ENTERED")
     return Command(
         goto=END,
         update={
@@ -146,7 +149,7 @@ async def answer_agent_node(state:MessagesState):
     }
 
     graph_result = await answer_agent.ainvoke(graph_input)
-    return {"messages": graph_result['messages'][1:]}
+    return {"messages": graph_result['messages'][-1]}
 
 
 graph = StateGraph(MessagesState)
@@ -222,13 +225,24 @@ async def generate_respose(message:str,checkpoint_id:Optional[str]=None):
         event_type=event["event"]
         
         if event_type=="on_chat_model_stream":
-            content=event["data"]["chunk"].content
-            if isinstance(content,list)and len(content)>0:
-                content=content[0]["text"]
+            node_name = event.get("metadata", {}).get("langgraph_node")
 
-            if content:
-                safe_content=content.replace('"','\\"').replace("\n","\\n")
-                yield f"data: {{\"type\":\"content\",\"content\":\"{safe_content}\"}}\n\n"
+            if node_name == "answer_generator":
+                content = event["data"]["chunk"].content
+                if isinstance(content, list) and len(content) > 0:
+                    content = content[0]["text"]
+
+                if content:
+                    safe_content = content.replace('"', '\\"').replace("\n", "\\n")
+                    yield f"data: {{\"type\":\"content\",\"content\":\"{safe_content}\"}}\n\n"
+
+            # content=event["data"]["chunk"].content
+            # if isinstance(content,list)and len(content)>0:
+            #     content=content[0]["text"]
+
+            # if content:
+            #     safe_content=content.replace('"','\\"').replace("\n","\\n")
+            #     yield f"data: {{\"type\":\"content\",\"content\":\"{safe_content}\"}}\n\n"
 
         elif event_type=="on_chat_model_end":
             if hasattr(event["data"]["output"],"tool_calls"):
@@ -263,8 +277,15 @@ async def generate_respose(message:str,checkpoint_id:Optional[str]=None):
                     yield f"data: {{\"type\": \"search_results\", \"urls\": {urls_json}}}\n\n"
             except json.JSONDecodeError:
                 pass
-
         
+
+        elif event_type == "on_chain_end" and event.get("name") == "off_topic_node":
+            content = "Sorry I cannot Answer that question!"
+            safe_content = content.replace('"', '\\"').replace("\n", "\\n")
+            yield f"data: {{\"type\":\"content\",\"content\":\"{safe_content}\"}}\n\n"
+
+
+        print(f"{event}\n\n\n")
     yield f"data: {{\"type\": \"end\"}}\n\n"
 
 @app.get("/chat/{message}", include_in_schema=True)
@@ -274,4 +295,27 @@ async def chat_stream(message: str, checkpoint_id: Optional[str] = Query(None)):
         media_type="text/event-stream"
     )
 
+FRONTEND_BUILD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "client", "out"))
 
+next_assets_dir = os.path.join(FRONTEND_BUILD_DIR, "_next")
+if os.path.exists(next_assets_dir):
+    app.mount("/_next", StaticFiles(directory=next_assets_dir), name="next-assets")
+
+@app.get("/{full_path:path}")
+async def serve_frontend(full_path: str):
+    file_path = os.path.join(FRONTEND_BUILD_DIR, full_path)
+    
+    # If the requested file actually exists in your 'out' folder
+    if os.path.isfile(file_path):
+        # Force the correct MIME types so the browser accepts them
+        media_type = None
+        if full_path.endswith(".css"):
+            media_type = "text/css"
+        elif full_path.endswith(".js"):
+            media_type = "application/javascript"
+            
+        return FileResponse(file_path, media_type=media_type)
+    
+    # Otherwise, fall back to index.html (for client-side routing)
+    index_path = os.path.join(FRONTEND_BUILD_DIR, "index.html")
+    return FileResponse(index_path)

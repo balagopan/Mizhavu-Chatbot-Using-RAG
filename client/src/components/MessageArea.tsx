@@ -38,7 +38,7 @@ const SearchStages = ({ searchInfo }: { searchInfo: SearchInfo | null }) => {
                 {searchInfo.stages.includes('searching') && (
                     <div className="relative">
                         {/* Green dot */}
-                        <div className="absolute -left-3 top-1 w-2.5 h-2.5 bg-teal-400 rounded-full z-10 shadow-sm"></div>
+                        <div className="absolute -left-3 top-1 w-2.5 h-2.5 bg-[#7d5454] rounded-full z-10 shadow-sm"></div>
 
                         {/* Connecting line to next item if reading exists */}
                         {searchInfo.stages.includes('reading') && (
@@ -46,7 +46,7 @@ const SearchStages = ({ searchInfo }: { searchInfo: SearchInfo | null }) => {
                         )}
 
                         <div className="flex flex-col">
-                            <span className="font-medium mb-2 ml-2">Searching the web</span>
+                            <span className="font-medium mb-2 ml-2">Retriving information</span>
 
                             {/* Search Query in box styling */}
                             <div className="flex flex-wrap gap-2 pl-2 mt-1">
@@ -65,7 +65,7 @@ const SearchStages = ({ searchInfo }: { searchInfo: SearchInfo | null }) => {
                 {searchInfo.stages.includes('reading') && (
                     <div className="relative">
                         {/* Green dot */}
-                        <div className="absolute -left-3 top-1 w-2.5 h-2.5 bg-teal-400 rounded-full z-10 shadow-sm"></div>
+                        <div className="absolute -left-3 top-1 w-2.5 h-2.5 bg-[#7d5454] rounded-full z-10 shadow-sm"></div>
 
                         <div className="flex flex-col">
                             <span className="font-medium mb-2 ml-2">Reading</span>
@@ -96,7 +96,7 @@ const SearchStages = ({ searchInfo }: { searchInfo: SearchInfo | null }) => {
                 {searchInfo.stages.includes('writing') && (
                     <div className="relative">
                         {/* Green dot with subtle glow effect */}
-                        <div className="absolute -left-3 top-1 w-2.5 h-2.5 bg-teal-400 rounded-full z-10 shadow-sm"></div>
+                        <div className="absolute -left-3 top-1 w-2.5 h-2.5 bg-[#7d5454] rounded-full z-10 shadow-sm"></div>
                         <span className="font-medium pl-2">Writing answer</span>
                     </div>
                 )}
