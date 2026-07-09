@@ -142,7 +142,7 @@ const MessageArea = ({ messages }: MessageAreaProps) => {
                     
 
                                 <div className="flex flex-col max-w-md">
-                                    {/* Search Status Display - Now ABOVE the message */}
+                                    {/* Search Status Display */}
                                     {!message.isUser && message.searchInfo && (
                                         <SearchStages searchInfo={message.searchInfo} />
                                     )}
