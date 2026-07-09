@@ -2,7 +2,7 @@ FROM node:20-slim AS builder
 WORKDIR /app
 COPY client/package*.json ./client/
 RUN cd client && npm install
-COPY client/ .
+COPY client/ ./client/
 RUN cd client && npm run build && npm run export
 
 FROM python:3.12-slim
