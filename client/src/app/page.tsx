@@ -20,13 +20,24 @@ const Home = () => {
     {
       id: 1,
       imageUrl: '/Chatbot_DP.jpg',
-      content: 'Hi there, how can I help you?',
       isUser: false,
       type: 'message'
     },
     {
       id: 2,
-      content: 'Welcome! I am your AI assistant. How can I help you today?', // Your new custom text
+      content: "Hello there! Welcome to the World of the Mizhavu.",
+      isUser: false,
+      type: 'message'
+    },
+    {
+      id: 3,
+      content: "My name is Mizhavu Ashan, and I will be your guide throug this exicting journey, where you will learn all about mizhavu instrument",
+      isUser: false,
+      type: 'message'
+    },
+    {
+      id: 3,
+      content: "Tell me how can I help you?",
       isUser: false,
       type: 'message'
     }

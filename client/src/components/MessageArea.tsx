@@ -127,39 +127,55 @@ const MessageArea = ({ messages }: MessageAreaProps) => {
             <div className="w-full p-6">
                 {messages.map((message) => (
                     <div key={message.id} className={`w-full flex ${message.isUser ? 'justify-end' : 'justify-start'} mb-5`}>
-                        <div className="flex flex-col max-w-md">
-                            {/* Search Status Display - Now ABOVE the message */}
-                            {!message.isUser && message.searchInfo && (
-                                <SearchStages searchInfo={message.searchInfo} />
-                            )}
+                        
 
-                            {/* Message Content */}
-                            <div
-                                className={`rounded-lg py-3 px-5 ${message.isUser
-                                    ? 'bg-[#7d5454] text-white rounded-br-none shadow-md'
-                                    : 'bg-[#F3F3EE] text-[#442929] border border-gray-200 rounded-bl-none shadow-sm'
-                                    }`}
-                            >
-                                {message.isLoading ? (
-                                    <PremiumTypingAnimation />
-                                ) : (
-                                    <div className="flex flex-col gap-2">
-                                        {message.imageUrl && (
-                                            <img
-                                                src={message.imageUrl}
-                                                alt="Message attachment"
-                                                className="w-64 rounded-md object-cover"
-                                            />
-                                        )}
-                                        {message.content && (
-                                            <span>{message.content}</span>
-                                        )}
-                                        {!message.content && !message.imageUrl && (
-                                            <span className="text-gray-400 text-xs italic">Waiting for response...</span>
-                                        )}
+                        <div className={`flex gap-3 max-w-xl ${message.isUser ? 'flex-row-reverse' : 'flex-row'} items-end`}>
+                            {/* Profile Picture */}
+                            <img 
+                                src={message.isUser ? '/Chatbot_user_DP.jpg' : '/Chatbot_DP.jpg'} 
+                                alt={message.isUser ? 'User Avatar' : 'AI Avatar'} 
+                                className="w-8 h-8 rounded-full object-cover flex-shrink-0 shadow-sm mb-0.5" 
+                            />
+                            
+                            {/* Column wrapper for the message and search info */}
+                            <div className="flex flex-col">
+                    
+
+                                <div className="flex flex-col max-w-md">
+                                    {/* Search Status Display - Now ABOVE the message */}
+                                    {!message.isUser && message.searchInfo && (
+                                        <SearchStages searchInfo={message.searchInfo} />
+                                    )}
+
+                                    {/* Message Content */}
+                                    <div
+                                        className={`rounded-lg py-3 px-5 ${message.isUser
+                                            ? 'bg-[#7d5454] text-white rounded-br-none shadow-md'
+                                            : 'bg-[#F3F3EE] text-[#442929] border border-gray-200 rounded-bl-none shadow-sm'
+                                            }`}
+                                    >
+                                        {message.isLoading ? (
+                                            <PremiumTypingAnimation />
+                                        ) : (
+                                            <div className="flex flex-col gap-2">
+                                                {message.imageUrl && (
+                                                    <img
+                                                        src={message.imageUrl}
+                                                        alt="Message attachment"
+                                                        className="w-64 rounded-md object-cover"
+                                                    />
+                                                )}
+                                                {message.content && (
+                                                    <span>{message.content}</span>
+                                                )}
+                                                {!message.content && !message.imageUrl && (
+                                                    <span className="text-gray-400 text-xs italic">Waiting for response...</span>
+                                                )}
+                                            </div>
+                                            )
+                                        }
                                     </div>
-                                    )
-                                }
+                                </div>
                             </div>
                         </div>
                     </div>

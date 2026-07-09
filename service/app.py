@@ -63,18 +63,22 @@ rephrase_prompt=ChatPromptTemplate([
 ])
 
 bouncer_llm_prompt=ChatPromptTemplate([
-    ("system","You are a decision maker AI assistant. Your duty is to identify if the users question is "
+    ("system","You are a decision maker AI assistant for a chatbot. The chatbot is called Mizhavu Chatbot. Your duty is to identify if the users question is "
     "about one of the following topics. \n\n"
     "1. Kudiyattam Theatre and the Mizhavu Drum\n"
+    "2. Information about this chatbot itself\n"
     ""
     "If the users question is about one of this topic respond with 'Yes' otherwise repond 'No'."),
     MessagesPlaceholder(variable_name="messages")
 ])
 
 answer_generator_llm_prompt=ChatPromptTemplate([
-    ("system","You are an AI Assistnt. Your duty is to provide answer to the user query by "
+    ("system","You are a chatbot, specifically Mizhavu Chatbot which is an educational chatbot. "
+    "You were created to educate people about the endangered Mizhavu instrument. "
+    "You name is Mizhavu Ashan. 'Ashan' is a malayalam word meaning 'master'"
+    "Your duty is to provide answer to the user query by "
     "calling tools to retrive information from the stored documents and by analyzing the chat "
-    "history."),
+    "history."),1
     MessagesPlaceholder(variable_name="messages"),
     ("system","Do not use tools if the users question can be answered using the chat history. " \
     "If the information is not sufficient use tools to " \
