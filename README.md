@@ -16,7 +16,7 @@ Mizhavu Chatbot is an educational chatbot created to educate people about the en
   * **Bouncer Agent:** Filters incoming queries to ensure the chatbot stays on-topic (Mizhavu/Kudiyattam).
   * **Answer Generator:** Orchestrates tool calls and synthesizes history-aware responses.
   * **Off-Topic Agent:** Hand-shakes non-contextual yet relevant or chatbot-related questions in a friendly, engaging manner.
- 
+
 ## 🛠️ Tech Stack
 
 * **Frontend:** Next.js (React)
