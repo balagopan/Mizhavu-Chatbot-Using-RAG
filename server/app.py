@@ -195,6 +195,10 @@ answer_agent=subgraph.compile()
 
 app = FastAPI()
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+out_dir = os.path.join(BASE_DIR, "client", "out")
+next_assets_dir = os.path.join(out_dir, "_next")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  
@@ -303,25 +307,15 @@ async def chat_stream(message: str, checkpoint_id: Optional[str] = Query(None)):
 
 FRONTEND_BUILD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "client", "out"))
 
-next_assets_dir = os.path.join(FRONTEND_BUILD_DIR, "_next")
-if os.path.exists(next_assets_dir):
-    app.mount("/_next", StaticFiles(directory=next_assets_dir), name="next-assets")
-
 @app.get("/{full_path:path}")
 async def serve_frontend(full_path: str):
+
     file_path = os.path.join(FRONTEND_BUILD_DIR, full_path)
     
-    # If the requested file actually exists in your 'out' folder
+
     if os.path.isfile(file_path):
-        # Force the correct MIME types so the browser accepts them
-        media_type = None
-        if full_path.endswith(".css"):
-            media_type = "text/css"
-        elif full_path.endswith(".js"):
-            media_type = "application/javascript"
-            
-        return FileResponse(file_path, media_type=media_type)
+        return FileResponse(file_path)
     
-    # Otherwise, fall back to index.html (for client-side routing)
+
     index_path = os.path.join(FRONTEND_BUILD_DIR, "index.html")
     return FileResponse(index_path)
