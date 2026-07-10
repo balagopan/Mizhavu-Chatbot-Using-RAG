@@ -5,6 +5,7 @@ Mizhavu Chatbot is an educational chatbot created to educate people about the en
 ## 🚀 Features
 
 * **Advanced RAG Engine:** Retrieves precise context stored in an online Pinecone vector database.
+* **Retriver provided as a tool:** The llm has the ability to decide whether to call the retriver node or answer using the chat history.
 * **Document Processing:** Knowledge base source text was extracted from authoritative PDF documents using unstructured.io.
 * **State-of-the-Art Embeddings:** Uses the `models/gemini-embedding-001` model by Google.
 * **State Preservation & Memory:** Built-in persistence via LangGraph checkpointers preserves active session chat histories.
@@ -13,7 +14,6 @@ Mizhavu Chatbot is an educational chatbot created to educate people about the en
   * **Bouncer Agent:** Filters incoming queries to ensure the chatbot stays on-topic (Mizhavu/Kudiyattam).
   * **Answer Generator:** Orchestrates tool calls and synthesizes history-aware responses.
   * **Off-Topic Agent:** Hand-shakes non-contextual yet relevant or chatbot-related questions in a friendly, engaging manner.
-
 ---
 
 ## 📦 Installation
