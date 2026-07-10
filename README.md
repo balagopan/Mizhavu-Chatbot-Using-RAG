@@ -86,7 +86,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 
 MIT License
 
-Copyright (c) [2026] [Balagopn G]
+Copyright (c) 2026 balagopan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
