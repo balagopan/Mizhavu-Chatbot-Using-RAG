@@ -1,5 +1,7 @@
 ## Mizhavu Chat Bot
 
+🚀 **[Try the Live Application Here](https://mizhavu-chatbot-using-rag.onrender.com)**
+
 Mizhavu Chatbot is an educational chatbot created to educate people about the endangered musical instrument Mizhavu. It utilizes a Retrieval-Augmented Generation (RAG) architecture to provide accurate, context-aware information about the Mizhavu drum and the historic Kudiyattam theatre tradition.
 
 ## 🚀 Features
