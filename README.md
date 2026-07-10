@@ -24,6 +24,7 @@ Mizhavu Chatbot is an educational chatbot created to educate people about the en
 * **AI Orchestration:** LangGraph & LangChain
 * **Vector Database:** Pinecone
 * **LLM & Embeddings:** Google Gemini API
+* **DevOps:** Docker & Docker Compose
 ---
 
 ## 📦 Installation
