@@ -2,11 +2,10 @@
 
 "use client"
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Header from '@/components/Header';
 import InputBar from '@/components/InputBar';
 import MessageArea from '@/components/MessageArea';
-import { useState } from 'react';
 import { Message } from '@/types';
 
 interface SearchInfo {
@@ -16,32 +15,79 @@ interface SearchInfo {
 }
 
 const Home = () => {
+  // const [messages, setMessages] = useState<Message[]>([
+  //   {
+  //     id: 1,
+  //     imageUrl: '/Chatbot_DP.jpg',
+  //     isUser: false,
+  //     type: 'message'
+  //   },
+  //   {
+  //     id: 2,
+  //     content: "Hello there! Welcome to the World of the Mizhavu.",
+  //     isUser: false,
+  //     type: 'message'
+  //   },
+  //   {
+  //     id: 3,
+  //     content: "My name is Mizhavu Ashan, and I will be your guide throug this exicting journey, where you will learn all about mizhavu instrument",
+  //     isUser: false,
+  //     type: 'message'
+  //   },
+  //   {
+  //     id: 4,
+  //     content: "Tell me how can I help you?",
+  //     isUser: false,
+  //     type: 'message'
+  //   }
+  // ]);
+
   const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      imageUrl: '/Chatbot_DP.jpg',
-      isUser: false,
-      type: 'message'
-    },
-    {
-      id: 2,
-      content: "Hello there! Welcome to the World of the Mizhavu.",
-      isUser: false,
-      type: 'message'
-    },
-    {
-      id: 3,
-      content: "My name is Mizhavu Ashan, and I will be your guide throug this exicting journey, where you will learn all about mizhavu instrument",
-      isUser: false,
-      type: 'message'
-    },
-    {
-      id: 4,
-      content: "Tell me how can I help you?",
-      isUser: false,
-      type: 'message'
-    }
-  ]);
+  { id: 1, imageUrl: '/Chatbot_DP.jpg', isUser: false, type: 'message' }
+]);
+
+
+  useEffect(() => {
+    let isMounted = true;
+
+    // These are your exact messages, just stored here so we can loop through them
+    const initialMessages: Message[] = [
+      { id: 2, content: "Hello there! Welcome to the World of the Mizhavu.", isUser: false, type: 'message' },
+      { id: 3, content: "My name is Mizhavu Ashan, and I will be your guide throug this exicting journey, where you will learn all about mizhavu instrument", isUser: false, type: 'message' },
+      { id: 4, content: "Tell me how can I help you?", isUser: false, type: 'message' }
+    ];
+
+    const loadInitialMessages = async () => {
+      for (let i = 0; i < initialMessages.length; i++) {
+        if (!isMounted) break;
+
+        const msg = initialMessages[i];
+
+        // 1. Show the loading animation
+        setMessages(prev => [...prev, { ...msg, content: "", imageUrl: undefined, isLoading: true }]);
+
+        // 2. Wait 1.2 seconds
+        await new Promise(resolve => setTimeout(resolve, 600));
+
+        if (!isMounted) break;
+
+        // 3. Reveal the actual message
+        setMessages(prev => prev.map(m => m.id === msg.id ? { ...msg, isLoading: false } : m));
+
+        // 4. Tiny pause before the next message
+        await new Promise(resolve => setTimeout(resolve, 400));
+      }
+    };
+
+    loadInitialMessages();
+
+    return () => { isMounted = false; };
+  }, []);
+
+
+
+
+
   const [currentMessage, setCurrentMessage] = useState("");
   const [checkpointId, setCheckpointId] = useState(null);
 
@@ -242,7 +288,16 @@ const Home = () => {
   };
 
   return (
-    <div className="flex justify-center min-h-screen py-8 px-4 bg-[url('/Chatbot_Bg_2.jpg')] bg-cover bg-center bg-no-repeat bg-fixed">
+    <div className="flex justify-center min-h-screen py-8 px-4 bg-[url('/Chatbot_Bg_2.jpg')] bg-cover bg-center bg-no-repeat bg-fixed relative">
+      
+      <div className="absolute top-2 left-4 md:top-2 md:left-6 z-10">
+        <img 
+          src="/logo.png"
+          alt="Mizhavu Chatbot" 
+          className="h-16 md:h-24 w-auto object-contain drop-shadow-md" 
+        />
+      </div>
+
       {/* Main container with refined shadow and border */}
       <div className="w-full max-w-xl flex flex-col h-[90vh] bg-transparent">
         <MessageArea messages={messages} />
