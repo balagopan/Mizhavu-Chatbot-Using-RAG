@@ -16,5 +16,5 @@ COPY server/ .
 
 COPY --from=builder /app/client/out /app/client/out
 
-RUN ls -R /app/client
+RUN ls -l /app/client/out/index.html
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "10000"]

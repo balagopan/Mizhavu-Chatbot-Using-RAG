@@ -305,17 +305,34 @@ async def chat_stream(message: str, checkpoint_id: Optional[str] = Query(None)):
         media_type="text/event-stream"
     )
 
-FRONTEND_BUILD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "client", "out"))
+# FRONTEND_BUILD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "client", "out"))
+
+# @app.get("/{full_path:path}")
+# async def serve_frontend(full_path: str):
+
+#     file_path = os.path.join(FRONTEND_BUILD_DIR, full_path)
+    
+
+#     if os.path.isfile(file_path):
+#         return FileResponse(file_path)
+    
+
+#     index_path = os.path.join(FRONTEND_BUILD_DIR, "index.html")
+#     return FileResponse(index_path)
+
+FRONTEND_BUILD_DIR = "/app/client/out"
 
 @app.get("/{full_path:path}")
 async def serve_frontend(full_path: str):
-
     file_path = os.path.join(FRONTEND_BUILD_DIR, full_path)
     
-
     if os.path.isfile(file_path):
         return FileResponse(file_path)
     
-
     index_path = os.path.join(FRONTEND_BUILD_DIR, "index.html")
+    
+    if not os.path.exists(index_path):
+        print(f"CRITICAL ERROR: index.html not found at {index_path}")
+        return {"error": "Frontend files not found"}
+        
     return FileResponse(index_path)
